@@ -1,6 +1,9 @@
 package token
 
-import "unicode"
+import (
+	"strconv"
+	"unicode"
+)
 
 type Token uint
 
@@ -232,6 +235,17 @@ var tokens = [...]string{
 	VALUE:   "value",
 
 	TILDE: "~",
+}
+
+func (tok Token) String() string {
+	s := ""
+	if 0 <= tok && tok < Token(len(tokens)) {
+		s = tokens[tok]
+	}
+	if s == "" {
+		s = "token(" + strconv.Itoa(int(tok)) + ")"
+	}
+	return s
 }
 
 var keywords map[string]Token
