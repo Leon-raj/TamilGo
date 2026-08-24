@@ -256,6 +256,8 @@ func Lookup(ident string) Token {
 }
 
 func IsIdentifier(name string) bool {
+	// TODO: Have a check to make sure that Tamil combining marks are preceded by a
+	// Tamil vowel or consonant. Maybe implement using a finite state machine.
 	if name == "" || IsKeyword(name) {
 		return false
 	}
