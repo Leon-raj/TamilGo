@@ -8,9 +8,10 @@
 package scanner
 
 import (
+	"TamilGo/token"
 	"bytes"
 	"fmt"
-	"go/token"
+	gotoken "go/token"
 	"path/filepath"
 	"strconv"
 	"unicode"
@@ -21,29 +22,29 @@ import (
 // encountered and a handler was installed, the handler is called with a
 // position and an error message. The position points to the beginning of
 // the offending token.
-type ErrorHandler func(pos token.Position, msg string)
+type ErrorHandler func(pos gotoken.Position, msg string)
 
 // A Scanner holds the scanner's internal state while processing
 // a given text. It can be allocated as part of another data
 // structure but must be initialized via [Scanner.Init] before use.
 type Scanner struct {
 	// immutable state
-	file *token.File  // source file handle
-	dir  string       // directory portion of file.Name()
-	src  []byte       // source
-	err  ErrorHandler // error reporting; or nil
-	mode Mode         // scanning mode
+	file *gotoken.File // source file handle
+	dir  string        // directory portion of file.Name()
+	src  []byte        // source
+	err  ErrorHandler  // error reporting; or nil
+	mode Mode          // scanning mode
 
 	// scanning state
-	ch         rune      // current character
-	offset     int       // character offset
-	rdOffset   int       // reading offset (position after current character)
-	lineOffset int       // current line offset
-	insertSemi bool      // insert a semicolon before next newline
-	nlPos      token.Pos // position of newline in preceding comment
+	ch         rune        // current character
+	offset     int         // character offset
+	rdOffset   int         // reading offset (position after current character)
+	lineOffset int         // current line offset
+	insertSemi bool        // insert a semicolon before next newline
+	nlPos      gotoken.Pos // position of newline in preceding comment
 
 	endPosValid bool
-	endPos      token.Pos // overrides the offset as the default end position
+	endPos      gotoken.Pos // overrides the offset as the default end position
 
 	// public state - ok to modify
 	ErrorCount int // number of errors encountered
@@ -133,7 +134,7 @@ const (
 //
 // Note that Init may call err if there is an error in the first character
 // of the file.
-func (s *Scanner) Init(file *token.File, src []byte, err ErrorHandler, mode Mode) {
+func (s *Scanner) Init(file *gotoken.File, src []byte, err ErrorHandler, mode Mode) {
 	// Explicitly initialize all fields since a scanner may be reused.
 	if file.Size() != len(src) {
 		panic(fmt.Sprintf("file size (%d) does not match src len (%d)", file.Size(), len(src)))
@@ -150,7 +151,7 @@ func (s *Scanner) Init(file *token.File, src []byte, err ErrorHandler, mode Mode
 
 		ch:          ' ',
 		endPosValid: true,
-		endPos:      token.NoPos,
+		endPos:      gotoken.NoPos,
 	}
 
 	s.next()
@@ -773,17 +774,17 @@ func (s *Scanner) switch4(tok0, tok1 token.Token, ch2 rune, tok2, tok3 token.Tok
 }
 
 // End returns the position immediately after the last scanned token.
-// If [Scanner.Scan] has not been called yet, End returns [token.NoPos].
-func (s *Scanner) End() token.Pos {
+// If [Scanner.Scan] has not been called yet, End returns [gotoken.NoPos].
+func (s *Scanner) End() gotoken.Pos {
 	// Handles special case:
-	// - Makes sure we return [token.NoPos], even when [Scanner.Init] has consumed a BOM.
+	// - Makes sure we return [gotoken.NoPos], even when [Scanner.Init] has consumed a BOM.
 	// - When the previous token was a synthetic [token.SEMICOLON] inside a multi-line
 	//   comment, we make sure End returns its ending position (i.e. prevPos+len("\n")).
 	if s.endPosValid {
 		return s.endPos
 	}
 
-	// Normal case: s.file.Pos(s.offset) represents the end of the token
+	// Normal case: s.file.Pos(s.offset) represents the end of the gotoken
 	return s.file.Pos(s.offset)
 }
 
@@ -819,7 +820,7 @@ func (s *Scanner) End() token.Pos {
 // Scan adds line information to the file added to the file
 // set with Init. Token positions are relative to that file
 // and thus relative to the file set.
-func (s *Scanner) Scan() (pos token.Pos, tok token.Token, lit string) {
+func (s *Scanner) Scan() (pos gotoken.Pos, tok token.Token, lit string) {
 scanAgain:
 	s.endPosValid = false
 	if s.nlPos.IsValid() {
@@ -828,7 +829,7 @@ scanAgain:
 		pos, tok, lit = s.nlPos, token.SEMICOLON, "\n"
 		s.endPos = pos + 1
 		s.endPosValid = true
-		s.nlPos = token.NoPos
+		s.nlPos = gotoken.NoPos
 		return
 	}
 
