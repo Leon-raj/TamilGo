@@ -1,8 +1,8 @@
 package token
 
-type Token int
+type Token uint
 
-// The list of tokens.
+// The list of tokens, mostly copied from Golang, along with some additional tokens.
 const (
 	// Special tokens
 	ILLEGAL Token = iota
@@ -206,9 +206,6 @@ var tokens = [...]string{
 	FALLTHROUGH: "அடுத்தநிலை",
 	FOR:         "வரை",
 
-	//செயலி means app,
-	//so that could be confusing
-	//but it's shorter than செயல்பாடு
 	FUNC: "செயல்",
 
 	GO:     "go",
@@ -242,4 +239,16 @@ func init() {
 	for i := keyword_beg + 1; i < keyword_end; i++ {
 		keywords[tokens[i]] = i
 	}
+}
+
+func IsKeyword(ident string) bool {
+	_, isKeyword := keywords[ident]
+	return isKeyword
+}
+
+func Lookup(ident string) Token {
+	if tok, isKeyword := keywords[ident]; isKeyword {
+		return tok
+	}
+	return IDENT
 }
