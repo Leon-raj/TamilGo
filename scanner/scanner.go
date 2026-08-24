@@ -322,8 +322,12 @@ func trailingDigits(text []byte) (int, int, bool) {
 	return i + 1, int(n), err == nil
 }
 
+func isValidIdentStart(ch rune) bool {
+	return ch == '_' || unicode.IsLetter(ch)
+}
+
 func isLetter(ch rune) bool {
-	return 'a' <= lower(ch) && lower(ch) <= 'z' || ch == '_' || ch >= utf8.RuneSelf && unicode.IsLetter(ch)
+	return unicode.IsLetter(ch) || (unicode.Is(unicode.Tamil, ch) && unicode.IsMark(ch))
 }
 
 func isDigit(ch rune) bool {
@@ -841,7 +845,7 @@ scanAgain:
 	// determine token value
 	insertSemi := false
 	switch ch := s.ch; {
-	case isLetter(ch):
+	case isValidIdentStart(ch):
 		lit = s.scanIdentifier()
 		if len(lit) > 1 {
 			// keywords are longer than one letter - avoid lookup otherwise
