@@ -1,5 +1,7 @@
 package token
 
+import "unicode"
+
 type Token uint
 
 // The list of tokens, mostly copied from Golang, along with some additional tokens.
@@ -251,4 +253,16 @@ func Lookup(ident string) Token {
 		return tok
 	}
 	return IDENT
+}
+
+func IsIdentifier(name string) bool {
+	if name == "" || IsKeyword(name) {
+		return false
+	}
+	for i, ch := range name {
+		if !unicode.IsLetter(ch) && ch != '_' && (i == 0 || !unicode.IsDigit(ch) || !(unicode.Is(unicode.Tamil, ch) && unicode.IsMark(ch))) {
+			return false
+		}
+	}
+	return true
 }
