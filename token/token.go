@@ -120,6 +120,7 @@ const (
 	ADDRESS
 	VALUE
 	NEGATE
+	AS
 
 	keyword_end
 
@@ -235,6 +236,7 @@ var tokens = [...]string{
 	ADDRESS: "முகவரி",
 	VALUE:   "value",
 	NEGATE:  "இல்லை",
+	AS:      "என",
 
 	TILDE: "~",
 }
