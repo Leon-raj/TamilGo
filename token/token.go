@@ -119,6 +119,7 @@ const (
 	RETURNS
 	ADDRESS
 	VALUE
+	NEGATE
 
 	keyword_end
 
@@ -233,6 +234,7 @@ var tokens = [...]string{
 	RETURNS: "தரும்",
 	ADDRESS: "முகவரி",
 	VALUE:   "value",
+	NEGATE:  "இல்லை",
 
 	TILDE: "~",
 }
