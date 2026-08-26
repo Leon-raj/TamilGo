@@ -107,7 +107,7 @@ const (
 	INTERFACE
 	MAP
 	PACKAGE
-	RANGE
+	FROM
 	RETURN
 
 	SELECT
@@ -223,7 +223,7 @@ var tokens = [...]string{
 	INTERFACE: "இடைமுகம்",
 	MAP:       "அகராதி",
 	PACKAGE:   "தொகுப்பு",
-	RANGE:     "range",
+	FROM:      "முதல்",
 	RETURN:    "திரும்பு",
 
 	SELECT: "தேர்ந்தெடு",
