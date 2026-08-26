@@ -96,7 +96,7 @@ const (
 	DEFER
 	ELSE
 	FALLTHROUGH
-	FOR
+	TILL
 
 	FUNC
 	GO
@@ -211,7 +211,7 @@ var tokens = [...]string{
 	DEFER:       "ஒத்திவை",
 	ELSE:        "அல்லது",
 	FALLTHROUGH: "அடுத்தநிலை",
-	FOR:         "வரை",
+	TILL:        "வரை",
 
 	FUNC: "செயல்",
 
